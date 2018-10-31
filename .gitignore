@@ -10,3 +10,5 @@ out
 gen
 .idea/
 web-mvc-demo1.iml
+
+/src/main/webapp/WEB-INF/classes/
