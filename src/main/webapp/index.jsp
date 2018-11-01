@@ -5,11 +5,30 @@
   Time: 23:12
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="java.util.List" %>
 <html>
 <head>
     <title>Index</title>
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script>
+        // $(function(){
+        //     $(".delete").click(function(){
+        //         var content = $(this).parent().parent().find("td:eq(1)").text();
+        //         var flag = confirm("确定要是删除" + content + "的信息吗?");
+        //         return flag;
+        //     });
+        // });
+        $(function () {
+           $(".delete").click(function () {
+               var content = $(this).parent().parent().find("td:eq(1)").text();
+               var flag = confirm("确定要删除" + content + "吗？");
+               return flag;
+           });
+        });
+
+    </script>
+
 </head>
 <body>
 <!--
@@ -38,7 +57,7 @@
         </tr>
         <tr>
             <td><input type="submit" value="query"></td>
-            <td><a href="add.do">Add a New Customer</a></td>
+            <td><a href="add_customer.jsp">Add a New Customer</a></td>
         </tr>
     </table>
 
@@ -72,7 +91,7 @@
                 <a href="edit.do">EDIT</a>
             </td>
             <td>
-                <a href="delete.do">DELETE</a>
+                <a href="delete.do?id=<%=c.getId() %>" class="delete">DELETE</a>
             </td>
         </tr>
 

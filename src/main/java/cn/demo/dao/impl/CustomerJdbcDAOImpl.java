@@ -54,4 +54,14 @@ public class CustomerJdbcDAOImpl extends DAO<Customer> implements CustomerDAO {
 		Long value = getValue(sql);
 		return value;
 	}
+
+	@Override
+	public Long getCountWithName(String name) {
+		String sql = "select count(id) from customer where name=?";
+		Long count = getValue(sql, name);
+		if (count == null) {
+			count = 0L;
+		}
+		return count;
+	}
 }

@@ -20,4 +20,6 @@ public interface CustomerDAO {
 	List<Customer> getForListWithCondition(CustomerQueryReq req);
 
 	Long getCount();
+
+	Long getCountWithName(String name);
 }

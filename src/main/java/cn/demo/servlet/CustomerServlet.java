@@ -49,12 +49,37 @@ public class CustomerServlet extends HttpServlet {
 		request.getRequestDispatcher("/index.jsp").forward(request,response);
 	}
 
-	private void addCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("add");
+		String name = request.getParameter("name");
+		String address = request.getParameter("address");
+		String phone = request.getParameter("phone");
+		Long countWithName = customerDAO.getCountWithName(name);
+		if (countWithName > 0) {
+			request.setAttribute("error_msg","名字重复");
+			request.getRequestDispatcher("/add_customer.jsp").forward(request,response);
+			return;
+		}
+		Customer customer = new Customer();
+		customer.setName(name);
+		customer.setAddress(address);
+		customer.setPhone(phone);
+		customerDAO.addCustomer(customer);
+		response.sendRedirect("/mvc/success.jsp");
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("delete");
+		String idStr = request.getParameter("id");
+		int id = 0;
+		try{
+			id = Integer.parseInt(idStr);
+			customerDAO.deleteCustomer(id);
+		}catch (Exception e){
+
+		}
+		response.sendRedirect("/mvc/query.do");
+
 	}
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
