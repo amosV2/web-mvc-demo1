@@ -88,7 +88,7 @@
             <td><%=c.getPhone()%>
             </td>
             <td>
-                <a href="edit.do">EDIT</a>
+                <a href="edit.do?id=<%=c.getId() %>">UPDATE</a>
             </td>
             <td>
                 <a href="delete.do?id=<%=c.getId() %>" class="delete">DELETE</a>

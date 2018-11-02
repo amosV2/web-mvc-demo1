@@ -16,7 +16,7 @@ public class CustomerJdbcDAOImpl extends DAO<Customer> implements CustomerDAO {
 
 	@Override
 	public void updateCustomer(Customer c) {
-		String sql = "update customer set name=?,address=?,value=? where id=?";
+		String sql = "update customer set name=?,address=?,phone=? where id=?";
 		update(sql,c.getName(),c.getAddress(),c.getPhone(),c.getId());
 	}
 

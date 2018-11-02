@@ -21,10 +21,10 @@ public class CustomerServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String servletPath = request.getServletPath();
-		String methodName = servletPath.substring(1,servletPath.indexOf("."));
+		String methodName = servletPath.substring(1, servletPath.indexOf("."));
 		try {
-			Method method = getClass().getDeclaredMethod(methodName,HttpServletRequest.class,HttpServletResponse.class);
-			method.invoke(this,request,response);
+			Method method = getClass().getDeclaredMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
+			method.invoke(this, request, response);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -34,7 +34,7 @@ public class CustomerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request,response);
+		doPost(request, response);
 	}
 
 	private void query(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,8 +45,8 @@ public class CustomerServlet extends HttpServlet {
 		CustomerQueryReq req = new CustomerQueryReq(name, address, phone);
 //		List<Customer> customers = customerDAO.getForList();
 		List<Customer> customers = customerDAO.getForListWithCondition(req);
-		request.setAttribute("customers",customers);
-		request.getRequestDispatcher("/index.jsp").forward(request,response);
+		request.setAttribute("customers", customers);
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
 	private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,8 +56,8 @@ public class CustomerServlet extends HttpServlet {
 		String phone = request.getParameter("phone");
 		Long countWithName = customerDAO.getCountWithName(name);
 		if (countWithName > 0) {
-			request.setAttribute("error_msg","名字重复");
-			request.getRequestDispatcher("/add_customer.jsp").forward(request,response);
+			request.setAttribute("error_msg", "名字重复");
+			request.getRequestDispatcher("add_customer.jsp").forward(request, response);
 			return;
 		}
 		Customer customer = new Customer();
@@ -65,29 +65,61 @@ public class CustomerServlet extends HttpServlet {
 		customer.setAddress(address);
 		customer.setPhone(phone);
 		customerDAO.addCustomer(customer);
-		response.sendRedirect("/mvc/success.jsp");
+		response.sendRedirect("success.jsp");
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("delete");
 		String idStr = request.getParameter("id");
 		int id = 0;
-		try{
+		try {
 			id = Integer.parseInt(idStr);
 			customerDAO.deleteCustomer(id);
-		}catch (Exception e){
+		}
+		catch (Exception e) {
 
 		}
-		response.sendRedirect("/mvc/query.do");
+		response.sendRedirect("query.do");
 
 	}
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("update");
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		String idStr = request.getParameter("id");
+		String oldName = request.getParameter("oldName");
+
+		//修改了名字
+		if (!name.equals(oldName)) {
+			Long count = customerDAO.getCountWithName(name);
+			if (count > 0) {
+				request.setAttribute("error_msg", "名字重复");
+				request.getRequestDispatcher("/update_customer.jsp").forward(request, response);
+				return;
+			}
+		}
+		Customer customer = new Customer();
+		customer.setAddress(address);
+		customer.setName(name);
+		customer.setPhone(phone);
+		customer.setId(Integer.parseInt(idStr));
+		customerDAO.updateCustomer(customer);
+		response.sendRedirect("query.do");
+
 	}
 
 	private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("edit");
+		/*String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");*/
+		String idStr = request.getParameter("id");
+		int id = -1;
+		Customer customer = customerDAO.getCustomer(Integer.parseInt(idStr));
+		request.setAttribute("customer", customer);
+		request.getRequestDispatcher("/update_customer.jsp").forward(request, response);
 	}
 
 }
